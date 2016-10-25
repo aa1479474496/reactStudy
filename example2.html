@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>example2</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="build/browser.js"></script>
+    <script src="build/jquery.js"></script>
+    <script src="build/remarkable.js"></script>
+  </head>
+  <body>
+    <div id="example"> </div>
+    <div id="example2"> </div>
+    <div id="example3"> </div>
+    	 
+   
+
+    <script type="text/babel">
+  		var Avatar = React.createClass({
+		  render: function() {
+		    return (
+		      <div>
+		        <PagePic pagename={this.props.pagename} />
+		        <PageLink pagename={this.props.pagename} />
+		      </div>
+		    );
+		  }
+		});
+
+		var PagePic = React.createClass({
+		  render: function() {
+		    return (
+		      <img src={'https://graph.facebook.com/' + this.props.pagename + '/picture'} />
+		    );
+		  }
+		});
+
+		var PageLink = React.createClass({
+		  render: function() {
+		    return (
+		      <a href={'https://www.facebook.com/' + this.props.pagename}>
+		        {this.props.pagename}
+		      </a>
+		    );
+		  }
+		});
+
+		var MyComponent = React.createClass({
+		  propTypes: {
+		    children: React.PropTypes.element.isRequired
+		  },
+
+		  render: function() {
+		    return (
+		      <div className="abc">
+		        {this.props.children}
+		      </div>
+		    );
+		  }
+
+		});
+
+		var Parent = React.createClass({
+		  render: function() {
+		    return (
+		      <MyComponent>
+		        <span>1</span>	
+		      </MyComponent>
+		    );
+		  }
+		});
+		ReactDOM.render(
+			<Parent />,
+			document.getElementById('example2')
+		);
+
+		var CheckLink = React.createClass({
+		  render: function() {
+		    // This takes any props passed to CheckLink and copies them to <a>
+		    return <a {...this.props}>{'√ '}{this.props.children}</a>;
+		  }
+		});
+
+		ReactDOM.render(
+		  <CheckLink href="/checked.html" title="react例子" data-index="1">
+		    Click here!
+		  </CheckLink>,
+		  document.getElementById('example3')
+		);
+
+
+
+
+		ReactDOM.render(
+		  <Avatar pagename="Engineering" />,
+		  document.getElementById('example')
+		);
+    </script>
+  </body>
+</html>

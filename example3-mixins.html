@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>example3</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="build/browser.js"></script>
+    <script src="build/jquery.js"></script>
+    <script src="build/remarkable.js"></script>
+  </head>
+  <body>
+    <div id="example"> </div>
+    <div id="example2"> </div>
+    <div id="example4"> </div>
+	    	 
+   
+
+    <script type="text/babel">
+		var SetIntervalMixin = {
+		  componentWillMount: function() {
+		    this.intervals = [];
+		  },
+		  setInterval: function() {
+		    this.intervals.push(setInterval.apply(null, arguments));
+		  },
+		  componentWillUnmount: function() {
+		    this.intervals.forEach(clearInterval);
+		  }
+		};
+
+		var TickTock = React.createClass({
+		  mixins: [SetIntervalMixin], // Use the mixin
+		  getInitialState: function() {
+		    return {seconds: 0};
+		  },
+		  componentDidMount: function() {
+		    this.setInterval(this.tick, 1000); // Call a method on the mixin
+		  },
+		  tick: function() {
+		    this.setState({seconds: this.state.seconds + 1});
+		  },
+		  render: function() {
+		    return (
+		      <p>
+		        React has been running for {this.state.seconds} seconds.
+		      </p>
+		    );
+		  }
+		});
+
+		ReactDOM.render(
+		  <TickTock />,
+		  document.getElementById('example')
+		);
+
+
+		// function FancyCheckbox(props) {
+		//   var fancyClass = props.checked ? 'FancyChecked' : 'FancyUnchecked';
+		//   return (
+		//     <div className={fancyClass} onClick={props.onClick}>
+		//       {props.children}
+		//     </div>
+		//   );
+		// }
+		// ReactDOM.render(
+		//   <FancyCheckbox checked={true} onClick={console.log.bind(console)}>
+		//     Hello world!
+		//   </FancyCheckbox>,
+		//   document.getElementById('example2')
+		// );
+
+		// function FancyCheckbox(props) {
+		//   var { checked, ...other } = props;
+		//   var fancyClass = checked ? 'FancyChecked' : 'FancyUnchecked';
+		 
+		//     <div {...other} className={fancyClass} />
+		//   );
+		// }
+		// ReactDOM.render(
+		//   <FancyCheckbox checked={true} onClick={console.log.bind(console)}>
+		//     Hello world!
+		//   </FancyCheckbox>,
+		//   document.getElementById('example2')
+		// );
+		// 
+   		
+   		var MyComponent = React.createClass({
+		  handleClick: function() {
+		    // Explicitly focus the text input using the raw DOM API.
+		    if (this.myTextInput !== null) {
+		      this.myTextInput.focus();
+		    }
+		  },
+		  render: function() {
+		    // The ref attribute is a callback that saves a reference to the
+		    // component to this.myTextInput when the component is mounted.
+		    return (
+		      <div>
+		        <input type="text" ref={(ref) => this.myTextInput = ref} />
+		        <input
+		          type="button"
+		          value="Focus the text input"
+		          onClick={this.handleClick}
+		        />
+		      </div>
+		    );
+		  }
+		});
+
+		ReactDOM.render(
+		  <MyComponent />,
+		  document.getElementById('example4')
+		);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>example1</title>
+    <script src="https://npmcdn.com/react@15.3.1/dist/react.js"></script>
+    <script src="https://npmcdn.com/react-dom@15.3.1/dist/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="https://npmcdn.com/jquery@3.1.0/dist/jquery.min.js"></script>
+    <script src="https://npmcdn.com/remarkable@1.6.2/dist/remarkable.min.js"></script>
+  </head>
+  <body>
+    <div id="example"> </div>
+    	 
+   
+
+    <script type="text/babel">
+  		class LikeButton extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            liked: false
+          };
+          this.handleClick = this.handleClick.bind(this);
+        }
+        handleClick() {
+          this.setState({liked: !this.state.liked});
+        }
+        render() {
+          const text = this.state.liked ? 'liked' : 'haven\'t liked';
+          return (
+            <div onClick={this.handleClick}>
+              You {text} this. Click to toggle.
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <LikeButton />,
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>

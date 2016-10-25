@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Tutorial</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="build/browser.js"></script>
+    <script src="build/jquery.js"></script>
+    <script src="build/remarkable.js"></script>
+  </head>
+  <body>
+    <div id="content">
+    	- CommentBox
+  		- CommentList
+   		 - Comment
+  		- CommentForm 
+    </div>
+
+    <script type="text/babel">
+    	// 数据类型模板
+    	var data = [
+		  {id: 1, author: "Pete Hunt", text: "这是一个评论组件"},
+		  {id: 2, author: "Jordan Walke", text: "这是另一个评论组件"}
+		];
+
+		//创建评论组件
+		var Comment = React.createClass({
+			rawMarkup: function(){
+				var md = new Remarkable();
+				var rawMarkup = md.render(this.props.children.toString());
+				return { __html: rawMarkup };
+			},
+			render: function(){
+				return (
+					<div className="comment">
+						<h2 className="commentAuthor">
+							{this.props.author}
+						</h2>
+						<span dangerouslySetInnerHTML={this.rawMarkup()} />
+					</div>
+				)
+			}
+		}); 
+
+		//评论列表组件
+		var CommentList = React.createClass({
+			render: function() {
+				var commentNodes = this.props.data.map(function(comment){
+					return (
+						<Comment author={comment.author} key={comment.id}>
+							{comment.text}
+						</Comment>	
+					);
+				});
+				return (
+					<div className="commentList">
+						{commentNodes}
+					</div>
+				)
+			}
+		});
+
+		// 添加新评论
+		var CommentForm = React.createClass({
+			getInitialState: function(){
+				return {author:'', text: ''};
+			},
+			handleAuthorChange: function(e){
+				this.setState({author: e.target.value});
+			},
+			handleTextChange: function(e){
+				this.setState({text: e.target.value});
+			},
+			handleSubmit:function(e){
+				e.preventDefault();
+				var author = this.state.author.trim();
+				var text = this.state.text.trim();
+				if(!author || !text)return;
+				this.props.onCommentSubmit({author: author, text: text});
+				this.setState({author:'', text:''});
+			},
+			render: function() {
+				return (
+					<form className="commentForm" onSubmit={this.handleSubmit}>
+						<input type="text" placeholder="你的名字" value={this.state.author} onChange={this.handleAuthorChange}/>
+						<input type="text" placeholder="说一些话" value={this.state.text} onChange={this.handleTextChange}/>
+						<input type="submit" value="Post" />
+						<p>{this.state.author}</p>
+					</form>
+				)
+			}
+		});
+
+		var CommentBox = React.createClass({
+		  loadCommentsFromServer: function(){
+		  	$.ajax({
+		  		url: this.props.url,
+		  		dataType: 'json',
+		  		cache: false,
+		  		success: function(data){
+		  			this.setState({data: data});
+		  		}.bind(this),
+		  		error: function(xhr, staus, err){
+		  			console.error(this.props.url, staus, err.toString());
+		  		}.bind(this)
+		  	});
+		  },
+		  handleCommentSubmit: function(comment){
+		  	$.ajax({
+		  		url: this.props.url,
+		  		dataType: 'json',
+		  		type: 'POST',
+		  		data: comment,
+		  		success: function(data){
+		  			this.setState({data: data});
+		  		}.bind(this),
+		  		error: function(xhr, status, err){
+		  			console.log('错误');
+		  			// console.error(this.props.url, status, err.toString());
+		  		}.bind(this)
+		  	});
+		  },
+		  getInitialState: function() {
+		  	return {data: []};
+		  },
+		  componentDidMount:function(){
+		  	this.loadCommentsFromServer();
+		  	setInterval(this.loadCommentsFromServer,this.props.pollInterval);
+		  	// setInterval(function(){console.log(1)},this.props.pollInterval);
+		  },
+		  render: function() {
+		    return (
+		      <div className="commentBox">
+		      		<h1>Comments(评论)</h1>
+		       		<CommentList data={this.state.data}/>
+		       		<CommentForm onCommentSubmit={this.handleCommentSubmit}/>
+		      </div>
+		    );
+		  }
+		});
+		ReactDOM.render(
+			<CommentBox url="./comments.json" pollInterval={2000} />,
+			document.getElementById('content')
+		);
+
+
+
+     
+    </script>
+  </body>
+</html>
