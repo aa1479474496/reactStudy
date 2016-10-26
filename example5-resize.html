@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>example2</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="build/browser.js"></script>
+    <script src="build/jquery.js"></script>
+    <script src="build/remarkable.js"></script>
+
+  </head>
+  <body>
+    <div id="example"> </div>
+    	 
+   
+
+    <script type="text/babel">
+		var Box = React.createClass({
+		  getInitialState: function() {
+		    return {windowWidth: window.innerWidth};
+		  },
+
+		  handleResize: function(e) {
+		    this.setState({windowWidth: window.innerWidth});
+		  },
+
+		  componentDidMount: function() {
+		    window.addEventListener('resize', this.handleResize);
+		  },
+
+		  componentWillUnmount: function() {
+		    window.removeEventListener('resize', this.handleResize);
+		  },
+
+		  render: function() {
+		    return <div>Current window width: {this.state.windowWidth}</div>;
+		  }
+		});
+
+		ReactDOM.render(<Box />, 
+			document.getElementById('example')
+		);
+    </script>
+  </body>
+</html>

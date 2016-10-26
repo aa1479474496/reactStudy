@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>example7</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="build/browser.js"></script>
+    <script src="build/jquery.js"></script>
+    <script src="build/remarkable.js"></script>
+  </head>
+  <body>
+    <div id="example"> </div>
+    <div id="example2"> </div>
+    <script type="text/babel">
+  		var handleClick = function(i, props) {
+		  console.log('You clicked: ' + props.items[i] + [i]);
+		}
+
+		function GroceryList(props) {  
+		  return (
+		    <div>
+		      {props.items.map(function(item, i) {
+		        return (
+		          <div onClick={handleClick.bind(this, i, props)} key={i}>编号：{i} + + {item}</div>
+		        );
+		      })}
+		    </div>
+		  );
+		}
+
+		ReactDOM.render(
+		  <GroceryList items={['Apple', 'Banana', 'Cranberry']} />, 
+		  document.getElementById('example')
+		);
+
+		var dataList = [
+			'apple', 'banana', 'orange'
+		]
+		var Single = React.createClass({
+			handleClick: function(){
+				this.props.parentClick(this.props.num);
+			},
+			render: function(){
+				return (
+					<p onClick={this.handleClick}>{this.props.item}{this.props.num}</p>
+				)
+			}
+		});
+		
+		var Comment = React.createClass({
+			pk:function(key){
+				alert(key);
+			},
+			render: function(){
+				var self = this;
+				var commentNodes = this.props.data.map(function(item,key){
+					return (
+						<Single item={item} key={key} num={key} parentClick={self.pk}/>	
+					);
+				});
+				return (
+					<div>
+						{commentNodes}
+					</div>	
+				)
+			}
+		});
+
+		ReactDOM.render(
+			<Comment data={dataList}/>,
+			document.getElementById('example2')
+		)
+
+
+
+    </script>
+  </body>
+</html>
