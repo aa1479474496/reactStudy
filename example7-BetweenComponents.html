@@ -50,7 +50,13 @@
 		
 		var Comment = React.createClass({
 			pk:function(key){
-				alert(key);
+				var d = this.props.data;
+				// console.log(d);
+				 var items = d.filter(function(item, i) {
+			      	return key !== i;
+			     });
+			     console.log(items);
+				 // this.setState({this.props.data: items});
 			},
 			render: function(){
 				var self = this;
